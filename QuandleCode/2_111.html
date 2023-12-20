@@ -1,0 +1,250 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 600px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": 1, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 2, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 3, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 4, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 5, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 6, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 7, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 8, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 9, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 10, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 11, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 12, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 13, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 14, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 15, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 16, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 17, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 18, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 19, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 26, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 27, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 28, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 29, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 30, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 31, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 32, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 33, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 34, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 35, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 36, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 37, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 38, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 39, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 40, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 41, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 42, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 43, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 44, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 45, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 46, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 50, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 51, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 52, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 53, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 54, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 55, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 56, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 57, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 58, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 59, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 60, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 61, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 62, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 76, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 80, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 81, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 82, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 83, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 84, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 85, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 86, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 87, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 88, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 89, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 90, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 91, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 92, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 99, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 100, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 101, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 102, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 103, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 104, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 105, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 106, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 107, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 108, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 109, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 110, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 111, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 112, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 113, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 114, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 115, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 116, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 123, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 124, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 125, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 141, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 142, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 143, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 144, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 159, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 160, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 165, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 166, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 167, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 168, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 169, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 170, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 171, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 172, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 173, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 174, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 175, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 176, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 177, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 178, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 179, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 180, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 181, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 182, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 183, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 184, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 192, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 193, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 194, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 195, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 196, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 197, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 234, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 235, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 236, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 237, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 238, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 239, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 240, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 241, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 242, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 247, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 248, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 261, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 262, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 263, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 264, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 265, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 307, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 308, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 309, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 310, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 311, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 312, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 313, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 324, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 325, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 329, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 330, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 331, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 335, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 336, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 337, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 338, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 339, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 340, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 341, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 376, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 377, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 378, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 379, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 451, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 452, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 453, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 454, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 455, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 456, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 457, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 458, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 459, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 460, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 494, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 495, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 525, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 526, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 531, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 545, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 546, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 547, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 548, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 549, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 600, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 601, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 602, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 603, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 604, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 680, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 681, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 755, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 759, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 760, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 761, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 762, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 763, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 764, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 765, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 766, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 767, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 768, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 769, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 770, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 771, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 865, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 866, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 867, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 868, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 869, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 870, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 871, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 872, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 873, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 874, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 884, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 885, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 886, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 887, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 888, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 889, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 890, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 891, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 892, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 1049, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 1050, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 1051, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 1052, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 1057, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 1158, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 1159, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 1390, "label": " ", "shape": "dot", "size": 10, "title": ""}, {"color": "#97c2fc", "id": 1427, "label": " ", "shape": "dot", "size": 10, "title": ""}]);
+                  edges = new vis.DataSet([{"from": 60, "label": "c", "to": 59}, {"from": 887, "label": "a", "to": 888}, {"from": 143, "label": "b", "to": 142}, {"from": 197, "label": "b", "to": 234}, {"from": 58, "label": "c", "to": 1049}, {"from": 88, "label": "b", "to": 87}, {"from": 61, "label": "a", "to": 60}, {"from": 307, "label": "a", "to": 248}, {"from": 40, "label": "b", "to": 39}, {"from": 178, "label": "b", "to": 177}, {"from": 2, "label": "c", "to": 76}, {"from": 4, "label": "b", "to": 1}, {"from": 196, "label": "c", "to": 545}, {"from": 455, "label": "a", "to": 456}, {"from": 160, "label": "a", "to": 144}, {"from": 755, "label": "c", "to": 27}, {"from": 42, "label": "a", "to": 43}, {"from": 115, "label": "a", "to": 114}, {"from": 41, "label": "b", "to": 42}, {"from": 1159, "label": "a", "to": 1158}, {"from": 603, "label": "a", "to": 604}, {"from": 184, "label": "a", "to": 242}, {"from": 174, "label": "a", "to": 175}, {"from": 600, "label": "a", "to": 324}, {"from": 104, "label": "c", "to": 61}, {"from": 55, "label": "a", "to": 54}, {"from": 1050, "label": "b", "to": 1051}, {"from": 38, "label": "c", "to": 376}, {"from": 178, "label": "c", "to": 248}, {"from": 234, "label": "a", "to": 235}, {"from": 526, "label": "b", "to": 525}, {"from": 168, "label": "b", "to": 167}, {"from": 884, "label": "c", "to": 36}, {"from": 601, "label": "b", "to": 600}, {"from": 53, "label": "c", "to": 197}, {"from": 116, "label": "c", "to": 14}, {"from": 337, "label": "c", "to": 767}, {"from": 42, "label": "c", "to": 890}, {"from": 1057, "label": "a", "to": 884}, {"from": 38, "label": "b", "to": 37}, {"from": 247, "label": "b", "to": 248}, {"from": 28, "label": "a", "to": 29}, {"from": 339, "label": "c", "to": 338}, {"from": 101, "label": "a", "to": 100}, {"from": 27, "label": "b", "to": 28}, {"from": 171, "label": "a", "to": 170}, {"from": 309, "label": "a", "to": 308}, {"from": 340, "label": "a", "to": 339}, {"from": 891, "label": "a", "to": 892}, {"from": 870, "label": "a", "to": 869}, {"from": 82, "label": "a", "to": 83}, {"from": 182, "label": "b", "to": 181}, {"from": 81, "label": "c", "to": 770}, {"from": 310, "label": "c", "to": 173}, {"from": 81, "label": "b", "to": 82}, {"from": 313, "label": "b", "to": 80}, {"from": 308, "label": "c", "to": 12}, {"from": 890, "label": "a", "to": 889}, {"from": 459, "label": "a", "to": 460}, {"from": 29, "label": "c", "to": 35}, {"from": 5, "label": "a", "to": 4}, {"from": 103, "label": "a", "to": 102}, {"from": 889, "label": "b", "to": 888}, {"from": 178, "label": "a", "to": 179}, {"from": 114, "label": "b", "to": 113}, {"from": 84, "label": "a", "to": 85}, {"from": 11, "label": "a", "to": 2}, {"from": 142, "label": "a", "to": 141}, {"from": 771, "label": "a", "to": 755}, {"from": 547, "label": "b", "to": 548}, {"from": 766, "label": "a", "to": 765}, {"from": 886, "label": "c", "to": 459}, {"from": 172, "label": "b", "to": 171}, {"from": 310, "label": "b", "to": 309}, {"from": 101, "label": "c", "to": 262}, {"from": 30, "label": "b", "to": 29}, {"from": 102, "label": "c", "to": 891}, {"from": 176, "label": "b", "to": 175}, {"from": 168, "label": "c", "to": 866}, {"from": 762, "label": "c", "to": 868}, {"from": 238, "label": "b", "to": 237}, {"from": 3, "label": "c", "to": 3}, {"from": 4, "label": "c", "to": 144}, {"from": 110, "label": "a", "to": 111}, {"from": 892, "label": "b", "to": 339}, {"from": 179, "label": "c", "to": 82}, {"from": 237, "label": "c", "to": 888}, {"from": 460, "label": "c", "to": 311}, {"from": 324, "label": "c", "to": 160}, {"from": 869, "label": "c", "to": 458}, {"from": 31, "label": "b", "to": 32}, {"from": 184, "label": "c", "to": 6}, {"from": 313, "label": "a", "to": 312}, {"from": 194, "label": "c", "to": 165}, {"from": 265, "label": "a", "to": 264}, {"from": 601, "label": "a", "to": 602}, {"from": 761, "label": "c", "to": 874}, {"from": 53, "label": "a", "to": 52}, {"from": 264, "label": "b", "to": 263}, {"from": 865, "label": "b", "to": 1159}, {"from": 874, "label": "a", "to": 873}, {"from": 458, "label": "b", "to": 459}, {"from": 85, "label": "b", "to": 86}, {"from": 62, "label": "a", "to": 46}, {"from": 86, "label": "c", "to": 531}, {"from": 183, "label": "b", "to": 184}, {"from": 545, "label": "a", "to": 99}, {"from": 755, "label": "b", "to": 239}, {"from": 312, "label": "c", "to": 172}, {"from": 34, "label": "a", "to": 35}, {"from": 261, "label": "c", "to": 84}, {"from": 107, "label": "a", "to": 106}, {"from": 62, "label": "c", "to": 601}, {"from": 866, "label": "a", "to": 865}, {"from": 13, "label": "a", "to": 12}, {"from": 197, "label": "a", "to": 196}, {"from": 495, "label": "c", "to": 456}, {"from": 376, "label": "a", "to": 377}, {"from": 759, "label": "b", "to": 759}, {"from": 335, "label": "a", "to": 336}, {"from": 764, "label": "b", "to": 765}, {"from": 88, "label": "a", "to": 89}, {"from": 378, "label": "c", "to": 457}, {"from": 335, "label": "c", "to": 264}, {"from": 760, "label": "c", "to": 91}, {"from": 338, "label": "b", "to": 1052}, {"from": 40, "label": "c", "to": 125}, {"from": 455, "label": "b", "to": 454}, {"from": 109, "label": "c", "to": 889}, {"from": 180, "label": "b", "to": 179}, {"from": 100, "label": "c", "to": 54}, {"from": 180, "label": "c", "to": 1052}, {"from": 114, "label": "c", "to": 765}, {"from": 325, "label": "a", "to": 341}, {"from": 34, "label": "c", "to": 263}, {"from": 103, "label": "c", "to": 1057}, {"from": 329, "label": "b", "to": 335}, {"from": 379, "label": "c", "to": 110}, {"from": 113, "label": "a", "to": 112}, {"from": 46, "label": "b", "to": 376}, {"from": 168, "label": "a", "to": 169}, {"from": 57, "label": "a", "to": 56}, {"from": 174, "label": "c", "to": 872}, {"from": 174, "label": "b", "to": 173}, {"from": 241, "label": "c", "to": 330}, {"from": 90, "label": "b", "to": 494}, {"from": 3, "label": "a", "to": 10}, {"from": 159, "label": "a", "to": 125}, {"from": 76, "label": "a", "to": 92}, {"from": 166, "label": "b", "to": 165}, {"from": 181, "label": "c", "to": 1159}, {"from": 17, "label": "a", "to": 16}, {"from": 546, "label": "c", "to": 763}, {"from": 886, "label": "b", "to": 887}, {"from": 241, "label": "b", "to": 242}, {"from": 770, "label": "a", "to": 769}, {"from": 112, "label": "c", "to": 182}, {"from": 234, "label": "c", "to": 526}, {"from": 107, "label": "c", "to": 159}, {"from": 57, "label": "c", "to": 892}, {"from": 263, "label": "a", "to": 262}, {"from": 338, "label": "a", "to": 337}, {"from": 116, "label": "a", "to": 526}, {"from": 531, "label": "a", "to": 18}, {"from": 547, "label": "c", "to": 604}, {"from": 43, "label": "c", "to": 307}, {"from": 337, "label": "b", "to": 336}, {"from": 600, "label": "c", "to": 141}, {"from": 549, "label": "a", "to": 548}, {"from": 62, "label": "b", "to": 61}, {"from": 14, "label": "b", "to": 13}, {"from": 50, "label": "c", "to": 5}, {"from": 452, "label": "c", "to": 1158}, {"from": 142, "label": "c", "to": 759}, {"from": 451, "label": "a", "to": 452}, {"from": 331, "label": "c", "to": 887}, {"from": 8, "label": "b", "to": 123}, {"from": 116, "label": "b", "to": 115}, {"from": 176, "label": "a", "to": 177}, {"from": 51, "label": "a", "to": 50}, {"from": 170, "label": "b", "to": 169}, {"from": 10, "label": "c", "to": 113}, {"from": 80, "label": "c", "to": 13}, {"from": 531, "label": "b", "to": 379}, {"from": 247, "label": "a", "to": 166}, {"from": 548, "label": "c", "to": 171}, {"from": 681, "label": "c", "to": 549}, {"from": 870, "label": "c", "to": 175}, {"from": 495, "label": "a", "to": 494}, {"from": 235, "label": "c", "to": 123}, {"from": 341, "label": "b", "to": 340}, {"from": 872, "label": "a", "to": 871}, {"from": 451, "label": "c", "to": 15}, {"from": 525, "label": "a", "to": 143}, {"from": 9, "label": "c", "to": 325}, {"from": 83, "label": "b", "to": 84}, {"from": 18, "label": "b", "to": 17}, {"from": 885, "label": "a", "to": 886}, {"from": 310, "label": "a", "to": 311}, {"from": 240, "label": "b", "to": 1427}, {"from": 105, "label": "a", "to": 104}, {"from": 1057, "label": "b", "to": 768}, {"from": 1051, "label": "c", "to": 45}, {"from": 180, "label": "a", "to": 181}, {"from": 58, "label": "a", "to": 59}, {"from": 110, "label": "b", "to": 109}, {"from": 193, "label": "a", "to": 192}, {"from": 30, "label": "c", "to": 764}, {"from": 52, "label": "b", "to": 51}, {"from": 760, "label": "b", "to": 761}, {"from": 247, "label": "c", "to": 56}, {"from": 330, "label": "a", "to": 329}, {"from": 106, "label": "b", "to": 105}, {"from": 45, "label": "b", "to": 3}, {"from": 183, "label": "c", "to": 455}, {"from": 602, "label": "c", "to": 873}, {"from": 124, "label": "c", "to": 329}, {"from": 680, "label": "c", "to": 1390}, {"from": 239, "label": "a", "to": 238}, {"from": 7, "label": "a", "to": 6}, {"from": 495, "label": "b", "to": 451}, {"from": 6, "label": "b", "to": 5}, {"from": 123, "label": "a", "to": 124}, {"from": 309, "label": "c", "to": 236}, {"from": 160, "label": "b", "to": 159}, {"from": 170, "label": "c", "to": 28}, {"from": 109, "label": "a", "to": 108}, {"from": 8, "label": "a", "to": 9}, {"from": 768, "label": "a", "to": 767}, {"from": 176, "label": "c", "to": 525}, {"from": 312, "label": "b", "to": 311}, {"from": 324, "label": "b", "to": 89}, {"from": 14, "label": "a", "to": 15}, {"from": 33, "label": "b", "to": 34}, {"from": 39, "label": "c", "to": 871}, {"from": 547, "label": "a", "to": 546}, {"from": 764, "label": "a", "to": 763}, {"from": 265, "label": "c", "to": 771}, {"from": 193, "label": "c", "to": 44}, {"from": 144, "label": "b", "to": 265}, {"from": 10, "label": "b", "to": 9}, {"from": 602, "label": "b", "to": 603}, {"from": 195, "label": "c", "to": 340}, {"from": 1427, "label": "a", "to": 1390}, {"from": 50, "label": "b", "to": 1390}, {"from": 262, "label": "b", "to": 261}, {"from": 192, "label": "c", "to": 111}, {"from": 331, "label": "b", "to": 330}, {"from": 51, "label": "c", "to": 603}, {"from": 761, "label": "a", "to": 762}, {"from": 56, "label": "b", "to": 55}, {"from": 45, "label": "a", "to": 44}, {"from": 39, "label": "a", "to": 38}, {"from": 341, "label": "c", "to": 115}, {"from": 242, "label": "c", "to": 88}, {"from": 874, "label": "b", "to": 1049}, {"from": 16, "label": "b", "to": 15}, {"from": 1050, "label": "c", "to": 169}, {"from": 46, "label": "c", "to": 1}, {"from": 90, "label": "c", "to": 89}, {"from": 11, "label": "c", "to": 26}, {"from": 325, "label": "b", "to": 604}, {"from": 112, "label": "b", "to": 111}, {"from": 195, "label": "a", "to": 194}, {"from": 494, "label": "c", "to": 177}, {"from": 460, "label": "b", "to": 680}, {"from": 240, "label": "c", "to": 239}, {"from": 87, "label": "c", "to": 867}, {"from": 8, "label": "c", "to": 7}, {"from": 771, "label": "b", "to": 770}, {"from": 85, "label": "c", "to": 31}, {"from": 379, "label": "a", "to": 378}, {"from": 885, "label": "b", "to": 884}, {"from": 237, "label": "a", "to": 236}, {"from": 766, "label": "c", "to": 453}, {"from": 868, "label": "a", "to": 867}, {"from": 19, "label": "c", "to": 18}, {"from": 32, "label": "c", "to": 17}, {"from": 58, "label": "b", "to": 57}, {"from": 871, "label": "b", "to": 870}, {"from": 1052, "label": "a", "to": 1051}, {"from": 141, "label": "b", "to": 26}, {"from": 76, "label": "b", "to": 549}, {"from": 59, "label": "b", "to": 681}, {"from": 308, "label": "b", "to": 307}, {"from": 1050, "label": "a", "to": 1049}, {"from": 241, "label": "a", "to": 240}, {"from": 102, "label": "b", "to": 101}, {"from": 767, "label": "b", "to": 766}, {"from": 193, "label": "b", "to": 194}, {"from": 238, "label": "c", "to": 92}, {"from": 19, "label": "b", "to": 7}, {"from": 54, "label": "b", "to": 53}, {"from": 83, "label": "c", "to": 454}, {"from": 108, "label": "b", "to": 107}, {"from": 90, "label": "a", "to": 91}, {"from": 681, "label": "a", "to": 680}, {"from": 760, "label": "a", "to": 759}, {"from": 108, "label": "c", "to": 885}, {"from": 457, "label": "b", "to": 456}, {"from": 124, "label": "b", "to": 125}, {"from": 768, "label": "c", "to": 769}, {"from": 1, "label": "a", "to": 1}, {"from": 890, "label": "b", "to": 891}, {"from": 12, "label": "b", "to": 11}, {"from": 869, "label": "b", "to": 868}, {"from": 236, "label": "b", "to": 235}, {"from": 196, "label": "b", "to": 195}, {"from": 41, "label": "a", "to": 40}, {"from": 33, "label": "a", "to": 32}, {"from": 336, "label": "c", "to": 52}, {"from": 192, "label": "b", "to": 60}, {"from": 44, "label": "b", "to": 43}, {"from": 873, "label": "b", "to": 872}, {"from": 87, "label": "a", "to": 86}, {"from": 103, "label": "b", "to": 104}, {"from": 27, "label": "a", "to": 26}, {"from": 453, "label": "a", "to": 454}, {"from": 167, "label": "c", "to": 166}, {"from": 143, "label": "c", "to": 41}, {"from": 81, "label": "a", "to": 80}, {"from": 867, "label": "b", "to": 866}, {"from": 458, "label": "a", "to": 457}, {"from": 100, "label": "b", "to": 99}, {"from": 19, "label": "a", "to": 165}, {"from": 92, "label": "b", "to": 91}, {"from": 37, "label": "a", "to": 36}, {"from": 2, "label": "b", "to": 2}, {"from": 546, "label": "b", "to": 545}, {"from": 378, "label": "b", "to": 377}, {"from": 261, "label": "a", "to": 167}, {"from": 31, "label": "a", "to": 30}, {"from": 99, "label": "c", "to": 16}, {"from": 313, "label": "c", "to": 37}, {"from": 865, "label": "c", "to": 33}, {"from": 182, "label": "a", "to": 183}, {"from": 377, "label": "c", "to": 105}, {"from": 762, "label": "b", "to": 763}, {"from": 36, "label": "b", "to": 35}, {"from": 1158, "label": "b", "to": 769}, {"from": 331, "label": "a", "to": 331}, {"from": 453, "label": "b", "to": 452}, {"from": 106, "label": "c", "to": 1427}, {"from": 172, "label": "a", "to": 173}, {"from": 55, "label": "c", "to": 55}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
