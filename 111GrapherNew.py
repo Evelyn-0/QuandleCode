@@ -185,7 +185,7 @@ def generate_graph(Vertices, Edges, path, filename, count):
 
     Edges = [(edge[0], edge[1], ALPHABET[edge[2]-1]) for edge in Edges]
 
-    net = Network(notebook=True)
+    net = Network(height="1500px", notebook=True)
     c = 1
     for vertex in Vertices:
         net.add_node(vertex, shape='circle', size=10, label=str(c), title='')
@@ -201,33 +201,16 @@ def generate_graph(Vertices, Edges, path, filename, count):
                 color = '#0000ff'
         net.add_edge(edge[0], edge[1], label=edge[2], color=color, width=4)
 
-    # net.show(os.path.join(path,'html',filename+'.html'))
-    net.show(filename+'.html')
+    net.show(os.path.join(path,filename+'.html'))
+    # net.show(filename+'.html')
 
-############################################
-# Example: this quandle has 134 elements
-############################################
 
-#gen = 3
-#init = [[1,-3,1,3,2,1,2,1,2,1,2],[1,3,1,-3,1,2,1,2,1,2,1,2],[3,2,1,3]]
-#sec = [[1, 1], [2, 2], [3, 3, 3], [2,1,3,1,2,-3],[-3,1,3,1,-3,1,3,2,1,2,1,2,1,2,1,2,1,2,1,2],[1,3,1,-3,1,3,1,-3,1,-3,1,3,1,-3,1,3]]
-
-############################################
-# Example: this quandle has 52 elements
-############################################
-
-# gen=3
-# init = [[1, 2, 1, 2, 1, 2, 1, 3, 1, 2, 1, 2], [1, 2, 1, 3, 2, 1, 3], [3, 1, 2, 1, 2, 1, 3, 1, 2, 1, 2, 1, 2]]
-# sec = [[1, 1], [2, 2], [3, 3], 
-#        [1, 2, 1, 3, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 3, 1, 2, 1, 2], 
-#        [1, 2, 3, 1, 2, 1, 2, 1, 3, 2, 1, 3], 
-#        [1, 2, 1, 2, 1, 3, 1, 2, 1, 2, 1, 3, 1, 2, 1, 2, 1, 3, 1, 2, 1, 2, 1, 2]]
-
-# gen = 3
-# init = [[3,1,2,1,3,1,2,1,2,1],[1,2,1,2,1,2,1,3,1,2,1,2],[3,1,2,1,2,3,1,2]]
-
+##############################################
 gen = 3
-k = -3
+k = -4
+##############################################
+
+
 # k = -2 1,1,1
 # try 1 init = [[3,2,1,2,1,3,2],[3,2,3,2,1,2,1],[2,1,2,3,2,1,2,1,2,1]]
 # try 2 init = [[3,2,3,2,1,2,1],[1,2,1,2,1,2,3,2,1,2],[3,2,1,2,1,3,2]]
@@ -245,5 +228,5 @@ print(Vertices)
 print(Edges)
 
 # generate_graph(Vertices, Edges, os.path.join('graphs','test2Quandle'), f'test2Quandle', 0)
-generate_graph(Vertices, Edges, os.path.join('graphs','test2Quandle'), file_name, 0)
+generate_graph(Vertices, Edges, os.path.join(os.getcwd(), 'graphs'), file_name, 0)
 
